@@ -1,10 +1,8 @@
+
 import { renderHook } from '@testing-library/react-hooks';
 import { useCallback } from 'react';
 import useAsync from '../src/useAsync';
 
-// NOTE: these tests cause console errors.
-//       maybe we should test in a real environment instead
-//       of a fake one?
 describe('useAsync', () => {
   it('should be defined', () => {
     expect(useAsync).toBeDefined();
@@ -34,8 +32,9 @@ describe('useAsync', () => {
       });
     });
 
-    it('initially starts loading', () => {
+    it('initially starts loading', async () => {
       expect(hook.result.current.loading).toEqual(true);
+      await hook.waitForNextUpdate();
     });
 
     it('resolves', async () => {
@@ -75,8 +74,9 @@ describe('useAsync', () => {
       });
     });
 
-    it('initially starts loading', () => {
+    it('initially starts loading', async () => {
       expect(hook.result.current.loading).toBeTruthy();
+      await hook.waitForNextUpdate();
     });
 
     it('resolves', async () => {
@@ -148,7 +148,7 @@ describe('useAsync', () => {
         hook = renderHook(
           ({ fn, counter }) => {
             const callback = useCallback(() => fn(counter), [counter]);
-            return useAsync<string>(callback, [callback]);
+            return useAsync<any>(callback, [callback]);
           },
           {
             initialProps: {
